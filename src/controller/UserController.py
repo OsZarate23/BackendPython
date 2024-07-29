@@ -4,7 +4,6 @@ from src.service import UserService
 user_blueprint = Blueprint('UserController', __name__)
 app = Flask(__name__)
 
-
 @user_blueprint.route('/users', methods=['GET'])
 def get_all_users():
     try:

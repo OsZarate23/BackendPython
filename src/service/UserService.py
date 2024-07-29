@@ -1,7 +1,4 @@
-from ..Configuration import get_db_connection
-
-connection = get_db_connection()
-
+from src.configuration.sql.Configuration import MySQL
 
 class UserService:
     def __init__(self):
@@ -9,15 +6,15 @@ class UserService:
 
 
 def get_all_users():
-    connection = None
     try:
-        connection = get_db_connection()
-        with connection.cursor() as cursor:
-            cursor.execute('SELECT * FROM users')
-            results = cursor.fetchall()
-        return results
+        with MySQL.cursor() as db:
+            db.execute('SELECT * FROM users')
+            results = db.fetchall()
+            columns = [desc[0] for desc in db.description]
+            users = [dict(zip(columns, row)) for row in results]
+        return users
     except Exception as e:
         raise Exception("Error retrieving users: " + str(e))
     finally:
-        if connection:
-            connection.close()
+        if db:
+            db.close()
